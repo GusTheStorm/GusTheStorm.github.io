@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -24,6 +24,7 @@
 <meta property="og:title" content="EZhang">
 <meta property="og:url" content="https://gusthestorm.github.io/index.html">
 <meta property="og:site_name" content="EZhang">
+<meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="ZhangYi">
 <meta name="twitter:card" content="summary">
 
@@ -79,7 +80,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -109,27 +110,27 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
 
   </li>
   </ul>
@@ -157,7 +158,7 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -180,22 +181,22 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2020-03-06 22:12:44" itemprop="dateCreated datePublished" datetime="2020-03-06T22:12:44+08:00">2020-03-06</time>
+              <time title="创建时间：2020-03-06 22:12:44" itemprop="dateCreated datePublished" datetime="2020-03-06T22:12:44+08:00">2020-03-06</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2020-04-02 18:36:02" itemprop="dateModified" datetime="2020-04-02T18:36:02+08:00">2020-04-02</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-02 20:55:48" itemprop="dateModified" datetime="2020-04-02T20:55:48+08:00">2020-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
                 </span>
@@ -212,57 +213,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="什么是底层const、顶层const？"><a href="#什么是底层const、顶层const？" class="headerlink" title="什么是底层const、顶层const？"></a>什么是底层const、顶层const？</h3><blockquote>
-<p>本文介绍const限定符的基本用法、底层和顶层const的性质和作用以及使用中容易混淆的概念。</p>
-</blockquote>
-<h4 id="const关键字"><a href="#const关键字" class="headerlink" title="const关键字"></a><strong>const</strong>关键字</h4><p>​        实际代码中我们常常希望某个变量的值在初始化之后便不再允许被更改，就像设置一年总是包含12个月、分配一块固定大小的内存等；C++也已经为我们提供了满足这一需求的关键字<strong>const</strong><sup><a href="#fn_ 1" id="reffn_ 1"> 1</a></sup>。正因为const对象在创建后就不能再更改，所以const对象必须初始化。</p>
-<h4 id="从指针上运用的const说起"><a href="#从指针上运用的const说起" class="headerlink" title="从指针上运用的const说起"></a>从指针上运用的const说起</h4><ol>
-<li><h6 id="指向常量的指针"><a href="#指向常量的指针" class="headerlink" title="指向常量的指针"></a>指向常量的指针</h6></li>
-</ol>
-<p>​        下面的代码示例展示了const关键字与指针关系的一个方面。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> cx = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *p = &amp;cx;		<span class="comment">//错误:普通指针无法指向const对象</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *cp = &amp;x;	<span class="comment">//正确:但是不能通过p修改x的值</span></span><br><span class="line">cp = &amp;cx;			<span class="comment">//正确</span></span><br></pre></td></tr></table></figure>
-<p>​        上面的代码中，const放在类型名int之前，因此指针本身是自由的。我们可以称其为<strong>指向常量的指针</strong>。为了容易理解，我们不妨把指针分为两层：指向（指针内存处存放的地址）和权限（解引用操作后能否作为左值）。指向常量的指针有如下特性：</p>
-<ul>
-<li><p><strong>指向</strong><br>其指向<strong>能够改变</strong>；能够指向常量或非常量，而普通指针无法指向常量。</p>
-</li>
-<li><p><strong>权限</strong></p>
-<p>无论所指对象本身是否是常量，都<strong>无法</strong>通过解引用修改所指对象。</p>
-</li>
-</ul>
-<ol>
-<li><h6 id="常量指针"><a href="#常量指针" class="headerlink" title="常量指针"></a>常量指针</h6><p>由于指针是对象，所以const是能够用来将指针限定为常量的。即将*放在const关键字之前。这意味着指针本身是不变的，而非所指对象。</p>
-</li>
-</ol>
-<ul>
-<li><p><strong>指向</strong><br>   其指向<strong>无法改变</strong>；</p>
-</li>
-<li><p><strong>权限</strong></p>
-<p>   <strong>能够</strong>通过解引用修改所指对象。取决于所指对象的类型。</p>
-</li>
-</ul>
-<p>​        这里大家可能会想到与常量指针名称相似的<strong>常量引用</strong>。二者性质完全不同：引用本身不是对象，它只是一个别名，其本身是无法被设定为恒定不变的。我们通常说的常量引用是指<strong>对常量的引用</strong><sup><a href="#fn_2" id="reffn_2">2</a></sup>。</p>
-<hr>
-<h4 id="顶层与底层const"><a href="#顶层与底层const" class="headerlink" title="顶层与底层const"></a>顶层与底层const</h4><p>​        底层const表示指针所指对象是一个常量；顶层const表示指针本身是一个常量。更一般地，<strong>顶层</strong>const可以表示任意类型的常量对象；<strong>底层</strong>const<sup><a href="#fn_3" id="reffn_3">3</a></sup>则与指针和引用这类复合类型的<strong>基本部分</strong>有关。指针类型可以同时是底层const和顶层const。</p>
-<p>​        关于顶层或底层const，我们可以通过拷贝操作来分析。实际上跟普通类型的赋值操作类似。</p>
-<ul>
-<li><p>拷贝时两个对象必须有相同的底层const资格，或其数据类型能够转换。</p>
-<p>类比：我们一般不能将常量赋给非常量。</p>
-</li>
-<li><p>顶层const对拷贝操作没有什么影响。</p>
-</li>
-</ul>
-<h4 id="constexpr"><a href="#constexpr" class="headerlink" title="constexpr"></a>constexpr</h4><p>​        用constexpr修饰表达式、变量或函数旨在告诉编译器，这是一个编译时就能得出的常量表达式。</p>
-<hr>
-<blockquote id="fn_ 1">
-<sup> 1</sup>. 编译器会在代码中用定义式中的右值替换被const修饰的变量。为了避免重复定义，它在默认状态下作用域是文件内，可用extern实现多文件共享。<a href="#reffn_ 1" title="Jump back to footnote [ 1] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_2">
-<sup>2</sup>. 使用时与指向常量的指针类似，但常量引用可以绑定到常量或非常量对象上。这是引用类型定义中的一个例外。C++定义：引用的类型必须与其所引用对象的类型一致。另一个例外是常量引用在初始化时可以用任意表达式作为初始值，只要该表达式的结果能够转换成引用的类型即可。—Lippman98_5/e_55<a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_3">
-<sup>3</sup>. 慎用：只有const_cast<type>(var)能够去掉对象var的const性质<a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
-</blockquote>
-
+          <p>底层const表示指针所指对象是一个常量；顶层const表示指针本身是一个常量。更一般地，顶层const可以表示任意类型的常量对象；底层const则与指针和引用这类复合类型的基本部分有关。指针类型可以同时是底层const和顶层const。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -280,7 +239,7 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -303,16 +262,16 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2020-02-13 16:07:42" itemprop="dateCreated datePublished" datetime="2020-02-13T16:07:42+08:00">2020-02-13</time>
+              <time title="创建时间：2020-02-13 16:07:42" itemprop="dateCreated datePublished" datetime="2020-02-13T16:07:42+08:00">2020-02-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2020-04-02 16:17:42" itemprop="dateModified" datetime="2020-04-02T16:17:42+08:00">2020-04-02</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-02 16:17:42" itemprop="dateModified" datetime="2020-04-02T16:17:42+08:00">2020-04-02</time>
               </span>
 
           
@@ -504,7 +463,7 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -527,16 +486,16 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2019-11-24 21:37:55" itemprop="dateCreated datePublished" datetime="2019-11-24T21:37:55+08:00">2019-11-24</time>
+              <time title="创建时间：2019-11-24 21:37:55" itemprop="dateCreated datePublished" datetime="2019-11-24T21:37:55+08:00">2019-11-24</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-12-01 21:36:39" itemprop="dateModified" datetime="2019-12-01T21:36:39+08:00">2019-12-01</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-01 21:36:39" itemprop="dateModified" datetime="2019-12-01T21:36:39+08:00">2019-12-01</time>
               </span>
 
           
@@ -594,7 +553,7 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/10/13/BalserSDK/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -617,10 +576,25 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-              
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2019-10-13 22:37:25 / Geändert am: 22:38:40" itemprop="dateCreated datePublished" datetime="2019-10-13T22:37:25+08:00">2019-10-13</time>
+              <time title="创建时间：2019-10-13 22:37:25" itemprop="dateCreated datePublished" datetime="2019-10-13T22:37:25+08:00">2019-10-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-02 21:19:01" itemprop="dateModified" datetime="2020-04-02T21:19:01+08:00">2020-04-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/everything/" itemprop="url" rel="index"><span itemprop="name">everything</span></a>
+                </span>
             </span>
 
           
@@ -640,6 +614,7 @@
 <p>每种数据都有各自的GenApi，比如整数型，浮点型或布尔型等。</p>
 <p>每种数据都有参数访问模式，即available、readable or writable，而各模式都有对应的判断函数，例如 GenApi::IsWritable(camera.Width)。</p>
 <p>Pylon API提供了诸多方便的接口。包括对相机参数的配置事件、图像获取与图像处理（存储格式、读写操作等）事件等。</p>
+<p><img src="images/image_2020/chamagudao.jpg" alt=""></p>
 <h3 id="关于构建项目的通用设置"><a href="#关于构建项目的通用设置" class="headerlink" title="关于构建项目的通用设置"></a>关于构建项目的通用设置</h3><p>This section shows the most common Microsoft Visual Studio build settings for building a 32 bit application using pylon. Consult the <a href="mk:@MSITStore:C:\Program Files\Basler\pylon 5\Development\Documentation\PylonCppSDK.chm::/pylon_advanced_topics.html#buildingapplications">Advanced Topics</a> section for more information, e.g. when a different configuration is required.</p>
 <p>Add the following include directories for Release and Debug project configurations (<code>Configuration Properties -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code>): </p>
 <p>$(PYLON_DEV_DIR)\include;</p>
@@ -684,7 +659,7 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/10/13/C++%E5%B0%8F%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -707,10 +682,25 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-              
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2019-10-13 22:37:25 / Geändert am: 22:38:47" itemprop="dateCreated datePublished" datetime="2019-10-13T22:37:25+08:00">2019-10-13</time>
+              <time title="创建时间：2019-10-13 22:37:25" itemprop="dateCreated datePublished" datetime="2019-10-13T22:37:25+08:00">2019-10-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-02 20:59:19" itemprop="dateModified" datetime="2020-04-02T20:59:19+08:00">2020-04-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
             </span>
 
           
@@ -724,34 +714,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<p>NULL</p>
-</blockquote>
-<p>NULL是在标准库头文件<stddef.h>中定义的宏</p>
-<p>它的值是一个空指针常量</p>
-<p>C中常数0和（void*）0都是空指针常量，而C++中只有0是。</p>
-<blockquote>
-<p>nullptr</p>
-</blockquote>
-<p>C++中NULL扩展为常数0，这是int型。因此如果有两个重载函数，其中一个参数为int型，另一个为char*型。</p>
-<p>当调用该函数时传递的参数是NULL，而我们的本意是调用char*类型对应的重载版本，这时会出现我们不想要的结果，调用了 int 重载版本。</p>
-<p>而关键字nullptr解决了这种二义性，它是一种空指针常量。</p>
-<blockquote>
-<p>宏定义do{}while(0)</p>
-</blockquote>
-<p>在定义形如此类的宏时</p>
-<h1 id="define-FUNCTION-x-a"><a href="#define-FUNCTION-x-a" class="headerlink" title="define FUNCTION(x)  a()"></a>define FUNCTION(x)  a()</h1><p>使用</p>
-<h1 id="define-FUNCTION-x-do-a-while-0"><a href="#define-FUNCTION-x-do-a-while-0" class="headerlink" title="define FUNCTION(x) do{ a(); } while(0)"></a>define FUNCTION(x) do{ a(); } while(0)</h1><p>可以避免意向不到的语义上的错误，并且能够保证do{ }内的代码只被执行一次。</p>
-<p>例如以下代码</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> JUDGE(X) AB(X);CD(X)</span></span><br></pre></td></tr></table></figure>
-<hr>
-<blockquote>
-<p>std::ios.sync_with_stdio(false)</p>
-<p>关闭iostream与stdio（printf、scanf）的流同步，能够做到cin、cout提速</p>
-<h1 id="define-XXX"><a href="#define-XXX" class="headerlink" title="define XXX();"></a>define XXX();</h1><p>abc()<br>宏定义，使用XXX();即可运行abc()</p>
-<p>函数参数列表为 ” … “ 表示可以接受任意多个参数，便于维护代码</p>
-</blockquote>
-
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <img src="/images/frame/background.jpg" itemprop="contentUrl">
+        </div>
+          <p>一些初学者的笔记，包括基本的语法和关键字。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/13/C++%E5%B0%8F%E7%9F%A5%E8%AF%86/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -769,8 +743,8 @@
         
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/07/09/UploadImages/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/10/13/Hexo%20%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
@@ -784,7 +758,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/07/09/UploadImages/" class="post-title-link" itemprop="url">UploadImages</a>
+            <a href="/2019/10/13/Hexo%20%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">Hexo 博客搭建</a>
         </h1>
 
         <div class="post-meta">
@@ -792,17 +766,26 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Erstellt: 2019-07-09 23:46:30" itemprop="dateCreated datePublished" datetime="2019-07-09T23:46:30+08:00">2019-07-09</time>
+              <time title="创建时间：2019-10-13 22:35:13" itemprop="dateCreated datePublished" datetime="2019-10-13T22:35:13+08:00">2019-10-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-07-10 00:26:13" itemprop="dateModified" datetime="2019-07-10T00:26:13+08:00">2019-07-10</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-02 21:05:09" itemprop="dateModified" datetime="2020-04-02T21:05:09+08:00">2020-04-02</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/everything/" itemprop="url" rel="index"><span itemprop="name">everything</span></a>
+                </span>
+            </span>
 
           
 
@@ -815,139 +798,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Today-I’m-gonna-upload-my-image"><a href="#Today-I’m-gonna-upload-my-image" class="headerlink" title="Today I’m gonna upload my image!!!"></a>Today I’m gonna upload my image!!!</h1><p><img src="UploadImages/myplot.png" alt="myplot"></p>
-<h1 id="Finally"><a href="#Finally" class="headerlink" title="Finally!"></a>Finally!</h1><blockquote>
-<p>I did it!</p>
-</blockquote>
-<p>之前按照步骤按部就班，安装了hexo-asset-image能够自动创建文件夹，但是在网页上仍然无法显示图片。</p>
-<p>后来又在各个博客上看到说要改asset插件的本版，或者改代码。仍然没用。</p>
-<p>果然，每个人可能都不一样，还是要研究研究自己问题出在哪。</p>
-<p>于是在自己的网页按F12，ctrl+F查找所附图片的名字 xx.png</p>
-<p>看到图片上传的域名都是mysite.com，按理说设置过域名这里就是指代我的域名，不然网站也不会能够正常打开？</p>
-<p>不过还是抱着试试的心态，在config.yml里把mysite.com改成了自己的域名。</p>
-<blockquote>
-<p>THEN!</p>
-<p>IT WORKS!!!</p>
-</blockquote>
-<h3 id="Main-content：解决Hexo博客图片无法正常加载（已安装asset插件的情况下）"><a href="#Main-content：解决Hexo博客图片无法正常加载（已安装asset插件的情况下）" class="headerlink" title="Main content：解决Hexo博客图片无法正常加载（已安装asset插件的情况下）"></a>Main content：解决Hexo博客图片无法正常加载（已安装asset插件的情况下）</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            <img src="/images/image_2020/xueshan.jpg" itemprop="contentUrl">
+        </div>
+          <p>记录Hexo博客搭建的过程，妈妈再也不用担心我忘记啦！</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/13/Hexo%20%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/06/30/Hexo%20%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
-      <meta itemprop="name" content="ZhangYi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="EZhang">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/30/Hexo%20%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">Hexo 博客搭建</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-
-              <time title="Erstellt: 2019-06-30 09:59:49" itemprop="dateCreated datePublished" datetime="2019-06-30T09:59:49+08:00">2019-06-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2020-04-02 15:15:00" itemprop="dateModified" datetime="2020-04-02T15:15:00+08:00">2020-04-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Hexo-博客搭建"><a href="#Hexo-博客搭建" class="headerlink" title="Hexo 博客搭建"></a>Hexo 博客搭建</h1><h3 id="下载nodejs（LTS）"><a href="#下载nodejs（LTS）" class="headerlink" title="下载nodejs（LTS）"></a>下载nodejs（LTS）</h3><ol>
-<li><p>nodejs.org    安装完成后检查node、npm版本，在Powershell或其它命令行窗口输入：</p>
-<p>node -v</p>
-<p>npm-v</p>
-</li>
-<li><p>使用npm安装cnpm淘宝镜像</p>
-<p>npm install -g cnpm —registry=<a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a></p>
-</li>
-<li><p>用cnpm全局安装hexo-cli</p>
-<p>cnpm install -g hexo-cli</p>
-<p>安装完成后可用 hexo -v 查看版本验证一下安装</p>
-</li>
-<li><p>建立空文件夹并进入</p>
-<p>mkdir blog</p>
-<p>cd blog/</p>
-</li>
-<li><p>hexo初始化</p>
-<p>hexo init</p>
-</li>
-<li><p>启动Hexo</p>
-<p>hexo s     或  hexo server</p>
-<p>写完一篇博客，可以用这条命令去启动预览一下</p>
-</li>
-<li><p>访问反馈的地址，Bingo！</p>
-</li>
-</ol>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
-<li><p>hexo n “文件名”</p>
-<p>新建的文本默认保存在blog文件夹下的source/_posts/</p>
-</li>
-<li><p>typora 文件名.md</p>
-<p>使用typora编辑md博客文章，使用前确保path环境变量中包含了typora文件夹</p>
-</li>
-</ul>
-<ul>
-<li><p>cd ../..      hexo clean     hexo g      hexo s</p>
-<p>退回blog、清理、生成再启动</p>
-</li>
-</ul>
-<h2 id="将博客部署到Github"><a href="#将博客部署到Github" class="headerlink" title="将博客部署到Github"></a>将博客部署到Github</h2><p>​    登录Github，新建一个repository，其中地址必须是： 账号名.github.io</p>
-<p>​    回到命令行，安装git插件工具：</p>
-<blockquote>
-<p>cnpm install —save hexo-deployer-git</p>
-</blockquote>
-<p>​    设置_config.yml</p>
-<blockquote>
-<p>typora _config.yml</p>
-</blockquote>
-<p>​    打开之后看到文末Deployment</p>
-<p>​    type: git     </p>
-<p>​    然后在下方添加repo、branch</p>
-<p>​    repo: 此处输入新建repository之后的地址</p>
-<p>​    branch: master</p>
-<p>保存退出后，使用 hexo d 命令部署到远端</p>
-
       
     </div>
 
@@ -1007,10 +869,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          站点概览
         </li>
       </ul>
 
@@ -1031,15 +893,15 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">Kategorien</span></a>
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
 </div>
@@ -1080,10 +942,10 @@
   </span>
   <span class="author" itemprop="copyrightHolder">ZhangYi</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
   </div>
 
         
@@ -1093,7 +955,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
       </span>
-      <span class="site-uv" title="Alle Besucher">
+      <span class="site-uv" title="总访客量">
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
@@ -1102,7 +964,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
       </span>
-      <span class="site-pv" title="Alle Aufrufe">
+      <span class="site-pv" title="总访问量">
         <span id="busuanzi_value_site_pv"></span>
       </span>
     </span>
