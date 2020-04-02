@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/carrot-solid.svg">
+  <link rel="mask-icon" href="/images/carrot-solid.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摄像机标定（Camera Calibration）- 理论基础与线性标定方法简述​        摄像机的标定要从成像谈起。物理世界中的三维物体映射到二维图像上的位置与物体、相机的几何位置相关。而他们之间的相互关系取决于摄像机使用怎么样的成像几何模型。这些几何模型的参数便是所谓的摄像机参数，这些参数的实验与计算过程就是所谓的摄像机标定。本次我们要讨论的是基于线性模型的摄像机标定。 1.相关理论​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="摄像机线性标定方法简述">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/index.html">
+<meta property="og:site_name" content="EZhang">
+<meta property="og:description" content="摄像机标定（Camera Calibration）- 理论基础与线性标定方法简述​        摄像机的标定要从成像谈起。物理世界中的三维物体映射到二维图像上的位置与物体、相机的几何位置相关。而他们之间的相互关系取决于摄像机使用怎么样的成像几何模型。这些几何模型的参数便是所谓的摄像机参数，这些参数的实验与计算过程就是所谓的摄像机标定。本次我们要讨论的是基于线性模型的摄像机标定。 1.相关理论​">
+<meta property="article:published_time" content="2020-02-13T08:07:42.000Z">
+<meta property="article:modified_time" content="2020-04-02T08:17:42.882Z">
+<meta property="article:author" content="ZhangYi">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://gusthestorm.github.io/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>摄像机线性标定方法简述 | EZhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">EZhang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
+      <meta itemprop="name" content="ZhangYi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="EZhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          摄像机线性标定方法简述
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Veröffentlicht am</span>
+
+              <time title="Erstellt: 2020-02-13 16:07:42" itemprop="dateCreated datePublished" datetime="2020-02-13T16:07:42+08:00">2020-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Bearbeitet am</span>
+                <time title="Geändert am: 2020-04-02 16:17:42" itemprop="dateModified" datetime="2020-04-02T16:17:42+08:00">2020-04-02</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Aufrufe" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Aufrufe: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="摄像机标定（Camera-Calibration）-理论基础与线性标定方法简述"><a href="#摄像机标定（Camera-Calibration）-理论基础与线性标定方法简述" class="headerlink" title="摄像机标定（Camera Calibration）- 理论基础与线性标定方法简述"></a>摄像机标定（Camera Calibration）- 理论基础与线性标定方法简述</h3><p>​        摄像机的标定要从成像谈起。物理世界中的三维物体映射到二维图像上的位置与物体、相机的几何位置相关。而他们之间的相互关系取决于摄像机使用怎么样的成像几何模型。这些几何模型的参数便是所谓的摄像机参数，这些参数的实验与计算过程就是所谓的摄像机标定。本次我们要讨论的是基于线性模型的摄像机标定。</p>
+<h4 id="1-相关理论"><a href="#1-相关理论" class="headerlink" title="1.相关理论"></a>1.相关理论</h4><p>​        要对<strong>物体-相机-图像</strong>这一系统的成像过程进行定量分析，不加以约定似乎让人无从下手。这时就轮到坐标系大展身手了。</p>
+<p>​        前人们为了定量分析成像过程，定义了以下三个坐标系：图像坐标系、摄像机坐标系和世界坐标系。这三者相互关联，共同发挥作用。我们首先分析图像和摄像机坐标系。</p>
+<ul>
+<li><h5 id="图像坐标系与摄像机坐标系"><a href="#图像坐标系与摄像机坐标系" class="headerlink" title="图像坐标系与摄像机坐标系"></a>图像坐标系与摄像机坐标系</h5><p>​        我们在图像上定义二维笛卡尔直角坐标系υ，ν；图像平面上一个像素的坐标（u，v）分别是该像素的列数与行数，因此原点O一般定义在图像左上角。相机标定本就是为了让我们获取的图像与物理世界更好地建立关联，因此为了描述像素与物理单位的联系，我们需要再建立一个用物理单位（通常是毫米mm）表示的图像坐标系。建立X，Y直角坐标系，XY轴与图像坐标系的UV轴对应平行。而XY坐标系的原点O<sub>1</sub>为图像内的一点，一般是光轴与图像平面的交点。</p>
+</li>
+</ul>
+<p>  变换关系可以用以下矩阵形式来表述：</p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+  u \\
+  v \\
+  1 \\
+  \end{pmatrix}
+  = 
+  \begin{pmatrix}
+  \frac{1}{dx} & 0 & u_0 \\
+  0 & \frac{1}{dy} & v_0 \\
+  0 & 0 & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  x\\
+  y\\
+  1\\
+  \end{pmatrix}
+  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  (1-1)</script><p>  逆关系为：</p>
+<script type="math/tex; mode=display">
+  \begin{pmatrix}
+  x \\
+  y \\
+  1 \\
+  \end{pmatrix}
+  = 
+  \begin{pmatrix}
+  dx & 0 & -u_0dx \\
+  0 & dy & -v_0dy \\
+  0 & 0 & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  u\\
+  v\\
+  1\\
+  \end{pmatrix}
+  \ \ \ \ \ \ \ \ \ \  (1-2)</script><ul>
+<li><h5 id="摄像机坐标系与世界坐标系"><a href="#摄像机坐标系与世界坐标系" class="headerlink" title="摄像机坐标系与世界坐标系"></a>摄像机坐标系与世界坐标系</h5><p>​        现在我们已经能够很好地描述图像和摄像机之间的空间关系，接下来还需要描述摄像机在其所处环境中的位置，这样一个坐标系称为世界坐标系，由X<sub>w</sub>、Y<sub>w</sub>、Z<sub>w</sub>三个轴组成。三维空间中的一点在世界坐标系上的位置无法直接与二维摄像机坐标系相换算，因此这里需要引入<strong>齐次坐标</strong>。下面我们简单介绍一下齐次坐标的概念以及为什么要引入齐次坐标。</p>
+<blockquote>
+<p>齐次坐标（Homogeneous Coordinates）是透视几何中的一个坐标系统。它将坐标维度升高1维，在这一维上，用0来描述向量，用1来描述点。因此能够很好地区分点和向量。</p>
+<p>例如齐次坐标（x，y，z，w）</p>
+<p>当w不等于零，则其描述的是三维空间坐标（x/w，y/w，z/w）。因此齐次坐标点乘以一个非零数仍表示同一点。</p>
+<p>当w等于零，此齐次坐标表示（x，y，z）这一点位于某方向的无穷远处。</p>
+<p>要将空间中的二维摄像机坐标空间与三维世界坐标空间相互变换，齐次坐标就是一种有效方法。在齐次坐标下，旋转/平移/仿射变换/透视变换都可以用同一个矩阵实现—这在传统笛卡尔坐标系下是不可能的。</p>
+</blockquote>
+<p>引用自博客（<a href="https://www.jianshu.com/u/054fb79c37c6" target="_blank" rel="noopener">红缕鱼与绿缕鱼与驴</a>）</p>
+</li>
+</ul>
+<p>  ​        使用齐次坐标后，摄像机坐标系和世界坐标系之间的关系就可以用旋转矩阵<strong>R</strong>和平移向量<strong>t</strong>来描述。令空间一点在摄像机坐标系下和世界坐标系下的齐次坐标分别为（X<sub>c</sub>，Y<sub>c</sub>，Z<sub>c</sub>）、（X<sub>w</sub>，Y<sub>w</sub>，Z<sub>w</sub>），则有如下关系：</p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+  X_c \\
+  Y_c \\
+  Z_c \\
+  1 \\
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+  \mathbf{R} & \mathbf{t}\\
+  \mathbf{0^T} & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  X_w \\
+  Y_w \\
+  Z_w \\
+  1 \\
+  \end{pmatrix}
+  =
+  \mathbf{M_1}
+  \begin{pmatrix}
+  X_w \\
+  Y_w \\
+  Z_w \\
+  1 \\
+  \end{pmatrix}
+  \ \ \ \ \ (1-3)</script><p>​        这里，<strong>R</strong>为3x3正交单位矩阵；<strong>t</strong>为三维平移向量；<strong>M<sub>1</sub></strong>为4x4矩阵。</p>
+<ul>
+<li><p>线性模型针孔模型(pin-hole model)</p>
+<p>也称中心射影或透视投影，是最简单线性模型。即任何点P在图像上的投影位置p，为光心O与P点的连线OP与图像屏幕的交点。根据比例有以下关系式：</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+  x = \frac{fX_c}{Z_c}\ , \  y = \frac{fY_c}{Z_c}  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1-4)</script><p>  矩阵表示：</p>
+<script type="math/tex; mode=display">
+  Z_c
+  \begin{pmatrix}
+  x \\
+  y \\
+  1 \\
+  \end{pmatrix}
+  = 
+  \begin{pmatrix}
+  f & 0 & 0 & 0\\
+  0 & f & 0 & 0 \\
+  0 & 0 & 1 & 0\\
+  \end{pmatrix}
+  \begin{pmatrix}
+  X_c\\
+  Y_c\\
+  Z_c\\
+  1 \\
+  \end{pmatrix}
+  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  (1-5)</script><p>  将式（1-2）、（1-3） 代入式（1-5）有：</p>
+<script type="math/tex; mode=display">
+  Z_c
+  \begin{pmatrix}
+  u \\
+  v \\
+  1 \\
+  \end{pmatrix}
+  = 
+  \begin{pmatrix}
+  \frac{1}{dx} & 0 & u_0 \\
+  0 & \frac{1}{dy} & v_0 \\
+  0 & 0 & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  f & 0 & 0 & 0\\
+  0 & f & 0 & 0 \\
+  0 & 0 & 1 & 0\\
+  \end{pmatrix}
+  \begin{pmatrix}
+  \mathbf{R} & \mathbf{t}\\
+  \mathbf{0^T} & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  X_w\\
+  Y_w\\
+  Z_w\\
+  1 \\
+  \end{pmatrix} \\
+  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =
+  \begin{pmatrix}
+  \alpha_x & 0 & u_0 & 0\\
+  0 & \alpha_y & v_0 & 0 \\
+  0 & 0 & 1 & 0\\
+  \end{pmatrix}
+  \begin{pmatrix}
+  \mathbf{R} & \mathbf{t}\\
+  \mathbf{0^T} & 1 \\
+  \end{pmatrix}
+  \begin{pmatrix}
+  X_w\\
+  Y_w\\
+  Z_w\\
+  1 \\
+  \end{pmatrix}
+  = \mathbf{M_1}\mathbf{M_2}\mathbf{X_w}</script><p>  ​                                                                            （1-6）</p>
+<p>  其中<strong>M<sub>1</sub></strong>中的参数只与摄像机内部结构有关，故称内参；<strong>M<sub>2</sub></strong>参数由摄像机相对世界坐标系的方位决定，称为外参；3x4矩阵<strong>M</strong>称为投影矩阵。注意：<strong>M</strong>矩阵本身没有物理意义。确定这些参数的过程就是摄像机标定。</p>
+<hr>
+<h4 id="2-线性模型摄像机标定方法"><a href="#2-线性模型摄像机标定方法" class="headerlink" title="2.线性模型摄像机标定方法"></a>2.线性模型摄像机标定方法</h4><p>​        一般的标定方法是在摄像机前放置一个特制的<strong>标定参照物（reference object）</strong>，摄像机获取该参照物的图像，再通过投影关系，由此计算摄像机的内外参数，也就是求<strong>M</strong>矩阵。一般世界坐标系选为这个参照物的物体坐标系。例如使用一个立方体作为参照物时，可以使用三个棱边作为X,Y,Z轴。</p>
+<p>​        根据式（1-6），每一个已知的空间点和对应的图像点可列出三个方程。消去<strong>Z<sub>c</sub></strong>后，可得两个线性方程。事实上，由空间6个以上的已知点与他们对应的图像点我们就可以求出<strong>M</strong>矩阵了。一般在求<strong>M</strong>矩阵时，我们指定m<sub>34</sub> = 1。（<strong>M</strong>矩阵只有10个独立变量。这里不加证明，感兴趣的童鞋可以参考相关计算机视觉书籍）</p>
+<h4 id="此方法的缺陷"><a href="#此方法的缺陷" class="headerlink" title="此方法的缺陷"></a>此方法的缺陷</h4><p>​        利用标定参照物上的标定点和对应图像点求取<strong>M</strong>矩阵时，我们会用图像处理方法求取标定点。一般方法是求取直线然后计算交点。求交点的过程就会引起误差。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Spenden
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="ZhangYi WeChat Bezahlung">
+        <p>WeChat Bezahlung</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="ZhangYi Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/" rel="prev" title="C++小知识">
+      <i class="fa fa-chevron-left"></i> C++小知识
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/" rel="next" title="什么是底层const、顶层const？">
+      什么是底层const、顶层const？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#摄像机标定（Camera-Calibration）-理论基础与线性标定方法简述"><span class="nav-number">1.</span> <span class="nav-text">摄像机标定（Camera Calibration）- 理论基础与线性标定方法简述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-相关理论"><span class="nav-number">1.1.</span> <span class="nav-text">1.相关理论</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图像坐标系与摄像机坐标系"><span class="nav-number">1.1.1.</span> <span class="nav-text">图像坐标系与摄像机坐标系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#摄像机坐标系与世界坐标系"><span class="nav-number">1.1.2.</span> <span class="nav-text">摄像机坐标系与世界坐标系</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-线性模型摄像机标定方法"><span class="nav-number">1.2.</span> <span class="nav-text">2.线性模型摄像机标定方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#此方法的缺陷"><span class="nav-number">1.3.</span> <span class="nav-text">此方法的缺陷</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZhangYi"
+      src="/images/sunny_yj_erhai.gif">
+  <p class="site-author-name" itemprop="name">ZhangYi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">Artikel</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">Kategorien</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gusthestorm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gusthestorm" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:444022683@qq.com" title="E-Mail → mailto:444022683@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/ewanglf" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;ewanglf" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangYi</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Design – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Alle Besucher">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Alle Aufrufe">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
