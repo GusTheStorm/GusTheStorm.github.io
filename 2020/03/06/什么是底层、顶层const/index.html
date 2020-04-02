@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/carrot-solid.svg">
+  <link rel="mask-icon" href="/images/carrot-solid.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是底层const、顶层const？ 本文介绍const限定符的基本用法、底层和顶层const的性质和作用以及使用中容易混淆的概念。  const关键字​        实际代码中我们常常希望某个变量的值在初始化之后便不再允许被更改，就像设置一年总是包含12个月、分配一块固定大小的内存等；C++也已经为我们提供了满足这一需求的关键字const^ 1。正因为const对象在创建后就不能再更改，所以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是底层const、顶层const？">
+<meta property="og:url" content="http://yoursite.com/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/index.html">
+<meta property="og:site_name" content="EZhang">
+<meta property="og:description" content="什么是底层const、顶层const？ 本文介绍const限定符的基本用法、底层和顶层const的性质和作用以及使用中容易混淆的概念。  const关键字​        实际代码中我们常常希望某个变量的值在初始化之后便不再允许被更改，就像设置一年总是包含12个月、分配一块固定大小的内存等；C++也已经为我们提供了满足这一需求的关键字const^ 1。正因为const对象在创建后就不能再更改，所以">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-06T14:12:44.000Z">
+<meta property="article:modified_time" content="2020-04-02T05:55:53.072Z">
+<meta property="article:author" content="ZhangYi">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>什么是底层const、顶层const？ | EZhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">EZhang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/06/%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%95%E5%B1%82%E3%80%81%E9%A1%B6%E5%B1%82const/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sunny_yj_erhai.gif.gif">
+      <meta itemprop="name" content="ZhangYi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="EZhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          什么是底层const、顶层const？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-06 22:12:44" itemprop="dateCreated datePublished" datetime="2020-03-06T22:12:44+08:00">2020-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-02 13:55:53" itemprop="dateModified" datetime="2020-04-02T13:55:53+08:00">2020-04-02</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是底层const、顶层const？"><a href="#什么是底层const、顶层const？" class="headerlink" title="什么是底层const、顶层const？"></a>什么是底层const、顶层const？</h3><blockquote>
+<p>本文介绍const限定符的基本用法、底层和顶层const的性质和作用以及使用中容易混淆的概念。</p>
+</blockquote>
+<h4 id="const关键字"><a href="#const关键字" class="headerlink" title="const关键字"></a><strong>const</strong>关键字</h4><p>​        实际代码中我们常常希望某个变量的值在初始化之后便不再允许被更改，就像设置一年总是包含12个月、分配一块固定大小的内存等；C++也已经为我们提供了满足这一需求的关键字<strong>const</strong><a href="编译器会在代码中用定义式中的右值替换被const修饰的变量。为了避免重复定义，它在默认状态下作用域是文件内，可用extern实现多文件共享。">^ 1</a>。正因为const对象在创建后就不能再更改，所以const对象必须初始化。</p>
+<h4 id="从指针上运用的const说起"><a href="#从指针上运用的const说起" class="headerlink" title="从指针上运用的const说起"></a>从指针上运用的const说起</h4><ol>
+<li><h6 id="指向常量的指针"><a href="#指向常量的指针" class="headerlink" title="指向常量的指针"></a>指向常量的指针</h6></li>
+</ol>
+<p>​        下面的代码示例展示了const关键字与指针关系的一个方面。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> cx = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> *p = &amp;cx;		<span class="comment">//错误:普通指针无法指向const对象</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *cp = &amp;x;	<span class="comment">//正确:但是不能通过p修改x的值</span></span><br><span class="line">cp = &amp;cx;			<span class="comment">//正确</span></span><br></pre></td></tr></table></figure>
+
+<p>​        上面的代码中，const放在类型名int之前，因此指针本身是自由的。我们可以称其为<strong>指向常量的指针</strong>。为了容易理解，我们不妨把指针分为两层：指向（指针内存处存放的地址）和权限（解引用操作后能否作为左值）。指向常量的指针有如下特性：</p>
+<ul>
+<li><p><strong>指向</strong><br>其指向<strong>能够改变</strong>；能够指向常量或非常量，而普通指针无法指向常量。</p>
+</li>
+<li><p><strong>权限</strong></p>
+<p>无论所指对象本身是否是常量，都<strong>无法</strong>通过解引用修改所指对象。</p>
+</li>
+</ul>
+<ol start="2">
+<li><h6 id="常量指针"><a href="#常量指针" class="headerlink" title="常量指针"></a>常量指针</h6><p>由于指针是对象，所以const是能够用来将指针限定为常量的。即将*放在const关键字之前。这意味着指针本身是不变的，而非所指对象。</p>
+</li>
+</ol>
+<ul>
+<li><p><strong>指向</strong><br>   其指向<strong>无法改变</strong>；</p>
+</li>
+<li><p><strong>权限</strong></p>
+<p>   <strong>能够</strong>通过解引用修改所指对象。取决于所指对象的类型。</p>
+</li>
+</ul>
+<p>​        这里大家可能会想到与常量指针名称相似的<strong>常量引用</strong>。二者性质完全不同：引用本身不是对象，它只是一个别名，其本身是无法被设定为恒定不变的。我们通常说的常量引用是指<strong>对常量的引用</strong><a href="使用时与指向常量的指针类似，但常量引用可以绑定到常量或非常量对象上。这是引用类型定义中的一个例外。C++定义：引用的类型必须与其所引用对象的类型一致。另一个例外是常量引用在初始化时可以用任意表达式作为初始值，只要该表达式的结果能够转换成引用的类型即可。--Lippman98_5/e_55">^2</a>。</p>
+<hr>
+<h4 id="顶层与底层const"><a href="#顶层与底层const" class="headerlink" title="顶层与底层const"></a>顶层与底层const</h4><p>​        底层const表示指针所指对象是一个常量；顶层const表示指针本身是一个常量。更一般地，<strong>顶层</strong>const可以表示任意类型的常量对象；<strong>底层</strong>const[^3]则与指针和引用这类复合类型的<strong>基本部分</strong>有关。指针类型可以同时是底层const和顶层const。</p>
+<p>​        关于顶层或底层const，我们可以通过拷贝操作来分析。实际上跟普通类型的赋值操作类似。</p>
+<ul>
+<li><p>拷贝时两个对象必须有相同的底层const资格，或其数据类型能够转换。</p>
+<p>类比：我们一般不能将常量赋给非常量。</p>
+</li>
+<li><p>顶层const对拷贝操作没有什么影响。</p>
+</li>
+</ul>
+<h4 id="constexpr"><a href="#constexpr" class="headerlink" title="constexpr"></a>constexpr</h4><p>​        用constexpr修饰表达式、变量或函数旨在告诉编译器，这是一个编译时就能得出的常量表达式。</p>
+<hr>
+<p>[^3]: 慎用：只有const_cast<type>(var)能够去掉对象var的const性质</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="ZhangYi WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="ZhangYi Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/" rel="prev" title="C++小知识">
+      <i class="fa fa-chevron-left"></i> C++小知识
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是底层const、顶层const？"><span class="nav-number">1.</span> <span class="nav-text">什么是底层const、顶层const？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#const关键字"><span class="nav-number">1.1.</span> <span class="nav-text">const关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从指针上运用的const说起"><span class="nav-number">1.2.</span> <span class="nav-text">从指针上运用的const说起</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#指向常量的指针"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">指向常量的指针</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#常量指针"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">常量指针</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#顶层与底层const"><span class="nav-number">1.3.</span> <span class="nav-text">顶层与底层const</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#constexpr"><span class="nav-number">1.4.</span> <span class="nav-text">constexpr</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZhangYi"
+      src="/images/sunny_yj_erhai.gif.gif">
+  <p class="site-author-name" itemprop="name">ZhangYi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gusthestorm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gusthestorm" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:444022683@qq.com" title="E-Mail → mailto:444022683@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/ewanglf" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;ewanglf" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangYi</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

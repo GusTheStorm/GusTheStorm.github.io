@@ -1,0 +1,14 @@
+运算符优先级 包括sizeof
+ 0   1   2   3  4
+[1] [1] [1] [] []
+
+insert 3,9
+
+for(int i = lsize;i>index;i--)
+
+arr[i] = arr[i-1];
+
+
+--
+
+arr[index] = num;
