@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="10&#x2F;10&#x2F;2019Specification：basler acA1300-30gm Pylon API概述pylon API 基于 GenlCam 标准。 GenlCam定义了一种相机相关数据的描述格式和一种Node节点概念（类似ROS节点），可以是事件、数据、配置等。节点实现了 GenAPI::INode 接口。 每种数据都有各自的GenApi，比如整数型，浮点型或布尔型等。 每种数据都有参">
+  <meta name="description" content="Pylon相机官方API的使用，对基本框架的一个简单总结。包括MSVC的通用设置、图像的操作方式等。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PylonAPI">
 <meta property="og:url" content="https://gusthestorm.github.io/2019/10/13/BalserSDK/index.html">
 <meta property="og:site_name" content="EZhang">
-<meta property="og:description" content="10&#x2F;10&#x2F;2019Specification：basler acA1300-30gm Pylon API概述pylon API 基于 GenlCam 标准。 GenlCam定义了一种相机相关数据的描述格式和一种Node节点概念（类似ROS节点），可以是事件、数据、配置等。节点实现了 GenAPI::INode 接口。 每种数据都有各自的GenApi，比如整数型，浮点型或布尔型等。 每种数据都有参">
+<meta property="og:description" content="Pylon相机官方API的使用，对基本框架的一个简单总结。包括MSVC的通用设置、图像的操作方式等。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gusthestorm.github.io/2019/10/13/BalserSDK/images/image_2020/chamagudao.jpg">
+<meta property="og:image" content="https://gusthestorm.github.io/2019/10/13/BalserSDK/images/image_2020/fj1.jpg">
 <meta property="article:published_time" content="2019-10-13T14:37:25.000Z">
-<meta property="article:modified_time" content="2020-04-02T13:19:01.573Z">
+<meta property="article:modified_time" content="2020-04-02T13:32:32.454Z">
 <meta property="article:author" content="ZhangYi">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gusthestorm.github.io/2019/10/13/BalserSDK/images/image_2020/chamagudao.jpg">
+<meta name="twitter:image" content="https://gusthestorm.github.io/2019/10/13/BalserSDK/images/image_2020/fj1.jpg">
 
 <link rel="canonical" href="https://gusthestorm.github.io/2019/10/13/BalserSDK/">
 
@@ -195,7 +195,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-02 21:19:01" itemprop="dateModified" datetime="2020-04-02T21:19:01+08:00">2020-04-02</time>
+                <time title="修改时间：2020-04-02 21:32:32" itemprop="dateModified" datetime="2020-04-02T21:32:32+08:00">2020-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,6 +215,7 @@
               <span class="post-meta-item-text">阅读次数：</span>
               <span id="busuanzi_value_page_pv"></span>
             </span>
+            <div class="post-description">Pylon相机官方API的使用，对基本框架的一个简单总结。包括MSVC的通用设置、图像的操作方式等。</div>
 
         </div>
       </header>
@@ -225,13 +226,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="10-10-2019"><a href="#10-10-2019" class="headerlink" title="10/10/2019"></a>10/10/2019</h4><p>Specification：basler acA1300-30gm</p>
+        <p><img src="images/image_2020/fj1.jpg" alt=""></p>
+<a id="more"></a>
+<p>Specification：basler acA1300-30gm</p>
 <h3 id="Pylon-API概述"><a href="#Pylon-API概述" class="headerlink" title="Pylon API概述"></a>Pylon API概述</h3><p>pylon API 基于 GenlCam 标准。</p>
 <p>GenlCam定义了一种相机相关数据的描述格式和一种Node节点概念（类似ROS节点），可以是事件、数据、配置等。节点实现了 GenAPI::INode 接口。</p>
 <p>每种数据都有各自的GenApi，比如整数型，浮点型或布尔型等。</p>
 <p>每种数据都有参数访问模式，即available、readable or writable，而各模式都有对应的判断函数，例如 GenApi::IsWritable(camera.Width)。</p>
 <p>Pylon API提供了诸多方便的接口。包括对相机参数的配置事件、图像获取与图像处理（存储格式、读写操作等）事件等。</p>
-<p><img src="images/image_2020/chamagudao.jpg" alt=""></p>
 <h3 id="关于构建项目的通用设置"><a href="#关于构建项目的通用设置" class="headerlink" title="关于构建项目的通用设置"></a>关于构建项目的通用设置</h3><p>This section shows the most common Microsoft Visual Studio build settings for building a 32 bit application using pylon. Consult the <a href="mk:@MSITStore:C:\Program Files\Basler\pylon 5\Development\Documentation\PylonCppSDK.chm::/pylon_advanced_topics.html#buildingapplications">Advanced Topics</a> section for more information, e.g. when a different configuration is required.</p>
 <p>Add the following include directories for Release and Debug project configurations (<code>Configuration Properties -&gt; C/C++ -&gt; General -&gt; Additional Include Directories</code>): </p>
 <p>$(PYLON_DEV_DIR)\include;</p>
@@ -297,8 +299,8 @@
       <i class="fa fa-chevron-left"></i> C++小知识
     </a></div>
       <div class="post-nav-item">
-    <a href="/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/" rel="next" title="C++小知识">
-      C++小知识 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/" rel="next" title="摄像机线性标定方法简述">
+      摄像机线性标定方法简述 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -359,7 +361,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-10-2019"><span class="nav-number">1.</span> <span class="nav-text">10&#x2F;10&#x2F;2019</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pylon-API概述"><span class="nav-number"></span> <span class="nav-text">Pylon API概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于构建项目的通用设置"><span class="nav-number"></span> <span class="nav-text">关于构建项目的通用设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于配置附加依赖项"><span class="nav-number"></span> <span class="nav-text">关于配置附加依赖项</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#11-10-2019"><span class="nav-number">1.</span> <span class="nav-text">11&#x2F;10&#x2F;2019</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pylon-基础"><span class="nav-number"></span> <span class="nav-text">Pylon 基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像操作方式"><span class="nav-number"></span> <span class="nav-text">图像操作方式</span></a></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pylon-API概述"><span class="nav-number">1.</span> <span class="nav-text">Pylon API概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于构建项目的通用设置"><span class="nav-number">2.</span> <span class="nav-text">关于构建项目的通用设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于配置附加依赖项"><span class="nav-number">3.</span> <span class="nav-text">关于配置附加依赖项</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#11-10-2019"><span class="nav-number">3.1.</span> <span class="nav-text">11&#x2F;10&#x2F;2019</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pylon-基础"><span class="nav-number">4.</span> <span class="nav-text">Pylon 基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像操作方式"><span class="nav-number">5.</span> <span class="nav-text">图像操作方式</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -375,7 +377,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
