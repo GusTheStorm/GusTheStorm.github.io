@@ -23,18 +23,18 @@
   <meta name="description" content="代码仅仅没有错误，能够满足使用是远远不够的。尤其程序需要处理大体量数据时，运行时间提升20%也会产生极大的影响。总结CSAPP中实用的几种优化思路。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序性能优化_CSAPP">
-<meta property="og:url" content="https://gusthestorm.github.io/2020/04/03/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="EZhang">
 <meta property="og:description" content="代码仅仅没有错误，能够满足使用是远远不够的。尤其程序需要处理大体量数据时，运行时间提升20%也会产生极大的影响。总结CSAPP中实用的几种优化思路。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gusthestorm.github.io/2020/04/03/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9F%BA%E7%A1%80/images/image_2020/ff1.JPG">
+<meta property="og:image" content="https://gusthestorm.github.io/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/images/image_2020/ff1.JPG">
 <meta property="article:published_time" content="2020-04-03T04:15:22.000Z">
 <meta property="article:modified_time" content="2020-04-03T07:45:28.144Z">
 <meta property="article:author" content="ZhangYi">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gusthestorm.github.io/2020/04/03/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9F%BA%E7%A1%80/images/image_2020/ff1.JPG">
+<meta name="twitter:image" content="https://gusthestorm.github.io/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/images/image_2020/ff1.JPG">
 
-<link rel="canonical" href="https://gusthestorm.github.io/2020/04/03/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9F%BA%E7%A1%80/">
+<link rel="canonical" href="https://gusthestorm.github.io/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
 
 
 <script id="page-configurations">
@@ -165,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/04/03/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
