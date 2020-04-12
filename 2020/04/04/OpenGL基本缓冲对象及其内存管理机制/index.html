@@ -20,21 +20,19 @@
     var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文包括编写独立函数时需要注意的一些基本原则，以及开发过程中推荐的做法。每当我遇到更好的方法，推荐做法将会及时更新和补充。">
+  <meta name="description" content="初学图形渲染管线(Graphics Pipeline)时，我们会接触到OpenGL如何通过着色器(Shader)来与GPU交互完成图形的渲染、顶点数据输入之后如何流动和完成处理。顶点数据的一个关键就是其在GPU中的管理方式，而这就不得不谈到VAO、VBO和EBO。本文希望透过代码实现层面来简单地梳理清这三者的关系以及顶点着色器(Vertex Shader)和片段着色器(Fragment Shade">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++函数使用小细节">
-<meta property="og:url" content="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/index.html">
+<meta property="og:title" content="OpenGL基本缓冲对象及其内存管理机制">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/04/04/OpenGL%E5%9F%BA%E6%9C%AC%E7%BC%93%E5%86%B2%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%85%B6%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="EZhang">
-<meta property="og:description" content="本文包括编写独立函数时需要注意的一些基本原则，以及开发过程中推荐的做法。每当我遇到更好的方法，推荐做法将会及时更新和补充。">
+<meta property="og:description" content="初学图形渲染管线(Graphics Pipeline)时，我们会接触到OpenGL如何通过着色器(Shader)来与GPU交互完成图形的渲染、顶点数据输入之后如何流动和完成处理。顶点数据的一个关键就是其在GPU中的管理方式，而这就不得不谈到VAO、VBO和EBO。本文希望透过代码实现层面来简单地梳理清这三者的关系以及顶点着色器(Vertex Shader)和片段着色器(Fragment Shade">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/images/image_2020/fj3.JPG">
-<meta property="article:published_time" content="2019-11-24T13:37:55.000Z">
-<meta property="article:modified_time" content="2020-04-03T09:47:43.840Z">
+<meta property="article:published_time" content="2020-04-04T14:52:11.000Z">
+<meta property="article:modified_time" content="2020-04-04T15:22:40.000Z">
 <meta property="article:author" content="ZhangYi">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/images/image_2020/fj3.JPG">
 
-<link rel="canonical" href="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/">
+<link rel="canonical" href="https://gusthestorm.github.io/2020/04/04/OpenGL%E5%9F%BA%E6%9C%AC%E7%BC%93%E5%86%B2%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%85%B6%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/">
 
 
 <script id="page-configurations">
@@ -46,7 +44,7 @@
   };
 </script>
 
-  <title>C++函数使用小细节 | EZhang</title>
+  <title>OpenGL基本缓冲对象及其内存管理机制 | EZhang</title>
   
 
 
@@ -165,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2019/11/24/C++%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%86%E8%8A%82/">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/04/04/OpenGL%E5%9F%BA%E6%9C%AC%E7%BC%93%E5%86%B2%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%85%B6%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
@@ -178,7 +176,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          C++函数使用小细节
+          OpenGL基本缓冲对象及其内存管理机制
         </h1>
 
         <div class="post-meta">
@@ -187,23 +185,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2019-11-24 21:37:55" itemprop="dateCreated datePublished" datetime="2019-11-24T21:37:55+08:00">2019-11-24</time>
+              <time title="创建时间：2020-04-04 22:52:11 / 修改时间：23:22:40" itemprop="dateCreated datePublished" datetime="2020-04-04T22:52:11+08:00">2020-04-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-03 17:47:43" itemprop="dateModified" datetime="2020-04-03T17:47:43+08:00">2020-04-03</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                  <a href="/categories/OpenGL/" itemprop="url" rel="index"><span itemprop="name">OpenGL</span></a>
                 </span>
             </span>
 
@@ -225,35 +217,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="images\image_2020\fj3.JPG" align=center /></p>
-<p>本文包括编写独立函数时需要注意的一些基本原则，以及开发过程中推荐的做法。每当我遇到更好的方法，推荐做法将会及时更新和补充。</p>
+        <p>初学图形渲染管线(Graphics Pipeline)时，我们会接触到OpenGL如何通过着色器(Shader)来与GPU交互完成图形的渲染、顶点数据输入之后如何流动和完成处理。顶点数据的一个关键就是其在GPU中的管理方式，而这就不得不谈到VAO、VBO和EBO。本文希望透过代码实现层面来简单地梳理清这三者的关系以及顶点着色器(Vertex Shader)和片段着色器(Fragment Shader)的数据流。</p>
 <a id="more"></a>
-<h2 id="C-，函数的使用小细节"><a href="#C-，函数的使用小细节" class="headerlink" title="C++，函数的使用小细节"></a>C++，函数的使用小细节</h2><p>本文包括编写独立函数时需要注意的一些基本原则，以及开发过程中推荐的做法。</p>
-<p>每当我遇到更好的方法，推荐做法将会及时更新和补充。</p>
-<h4 id="函数的编写"><a href="#函数的编写" class="headerlink" title="函数的编写"></a>函数的编写</h4><p>返回类型、函数名、参数列表、返回值</p>
-<p>参数列表可以为空；</p>
-<p>参数列表中可以使用省略号来实现具有可变参数特点的函数，方便重用与扩展。</p>
-<p>例如：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">effective</span><span class="params">(<span class="keyword">double</span> method, ...)</span></span></span><br></pre></td></tr></table></figure>
-<p><u>专题：使用可变参数的C++函数</u></p>
-<h4 id="参数的传递"><a href="#参数的传递" class="headerlink" title="参数的传递"></a>参数的传递</h4><p>两种参数传递方式：传值（value）、传址（reference）</p>
-<p>当用传值方式将对象传递给函数时，默认情形下其值将被复制一份，复制的对象是局部定义的。函数中复制的对象存放于调用函数时分配的程序栈中。</p>
-<p>而用传址方式传递时，函数中的参数与传入的对象直接关联。</p>
-<blockquote>
-<p>推荐的做法</p>
-</blockquote>
-<ol>
-<li>应使用更高效的传址（reference）方式<strong>传入</strong>对象；当不需要修改传递过来的对象时，应该添加 const，表明我们只是避免复制操作，而不是要修改参数。</li>
-<li><strong>传出</strong>对象时，应使用传值（value）方式。因为当函数结束，函数栈内存将消亡，局部对象也将消亡，返回消亡对象的地址会导致错误。而传值方式返回的是对象的副本，它在函数外依然存在（大多数C++编译器会对传值返回的对象进行NRV优化操作）。</li>
-</ol>
-<h4 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h4><p>函数在参数传递过程中，应避免过于依赖定义于 file scope 内的对象。</p>
-<p>这些局部对象不利于代码的重用。</p>
-<p>因为我们除了理解函数如何工作，还需要去理解这些新定义对象的工作逻辑。</p>
-<p>对此我真的是深有体会，阅读实验室程序的代码，当一个函数定义了太多局部对象，真的很难阅读和理解此函数的工作逻辑。</p>
-<p>可以通过尽量在参数列表中添加参数，并提供默认值来减少对局部对象的依赖。</p>
-<hr>
-<h4 id="番外篇：Mutable关键字"><a href="#番外篇：Mutable关键字" class="headerlink" title="番外篇：Mutable关键字"></a>番外篇：Mutable关键字</h4><p>假设我们需要设计一个类Character，此类中需要一个Private成员容器类，比如vector类：vector<int> feature，并希望此类能够自带Iterator机制，因此我们需要额外定义一些变量来实现：指示容器的大小size、起始位置start以及下一个目标next。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Character</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;<span class="keyword">return</span> _size;&#125;	<span class="comment">//这两个函数完全不改变object的任何值</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">strat</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;<span class="keyword">return</span> _strat;&#125;	<span class="comment">//因此添加const</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">next</span><span class="params">(<span class="keyword">int</span> &amp;val)</span></span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _size;</span><br><span class="line">    <span class="keyword">int</span> _strat;</span><br><span class="line">    <span class="keyword">int</span> _next;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; feature;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当某个函数将一个Character类引用作为参数</span></span><br><span class="line"><span class="comment">//又不希望更改其值，因此在参数前使用const的时候，问题出现了</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">const</span> Character &amp;Fighter)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Fighter.next(<span class="number">1</span>);</span><br><span class="line">  	<span class="comment">//Character是const参数，但next()会更改其_next参数</span></span><br><span class="line">    <span class="comment">//可`_next`只是用来实现迭代器，这并不改变Character类中用户真正关心的部分</span></span><br><span class="line">    <span class="comment">//此时的`next`便是所谓的不破坏对象的常量性（constness）</span></span><br><span class="line">    <span class="comment">//此时，我们需要为`next()`函数添加const,并将`_next`加上mutable关键字</span></span><br><span class="line">    <span class="comment">//表明此参数可更改且不破坏此对象的常量性</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="着色器的创建"><a href="#着色器的创建" class="headerlink" title="着色器的创建"></a>着色器的创建</h4><p>着色器创建分为Build和Compile两大步骤，具体如下：</p>
+<p><code>glCreateShader()</code>创建着色器的函数返回一个int型数字编号，因此着色器是通过一个代号来间接管理的。此时着色器还没有具体操作，我们需要通过<code>glShaderSource()</code>来添加着色器的处理操作。着色器内容的创建要用到GLSL语言，然后用C风格字符串的形式包装起来以char*形式传递给内容函数。GLSL类似C语言，读者可自行查阅详细书写语法，这里就不赘述了。然后<code>glCompileShader()</code>即可。注意添加处理失败的代码。</p>
+<p>VAO: genVA<br>VBO: glGenBf<br>EBO: glGenBf</p>
+<p>BindVA(VAO)<br>BindBf(GL_A_B, VBO)<br>BfData(GL_A_B, size, vertexdata, dataType)<br><em>BindBf(GL_E_A_B, EBO)
+</em>BindData(GL_E_A_B, size, indicesdata, dataType)<br>VAP(StartOfData, DataLength, DataType, GL_False, DataSize, (void *)0)<br>EnableVAA(0)</p>
+<p>while()<br>{</p>
+<p>​    **</p>
+<p>​    UseProgram(Program)<br>​    BindVA(VAO)<br>​    Draw(Shape, point_n, DataType, 0)</p>
+<p>​    **</p>
+<p>}</p>
 
     </div>
 
@@ -289,13 +264,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/10/13/C++%E5%B0%8F%E7%9F%A5%E8%AF%86/" rel="prev" title="C++小知识">
-      <i class="fa fa-chevron-left"></i> C++小知识
+    <a href="/2020/04/03/%E5%9F%BA%E7%A1%80%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="prev" title="程序性能优化_CSAPP">
+      <i class="fa fa-chevron-left"></i> 程序性能优化_CSAPP
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/13/%E6%91%84%E5%83%8F%E6%9C%BA%E7%BA%BF%E6%80%A7%E6%A0%87%E5%AE%9A%E6%96%B9%E6%B3%95%E7%AE%80%E8%BF%B0/" rel="next" title="摄像机线性标定方法简述">
-      摄像机线性标定方法简述 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -355,7 +327,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-，函数的使用小细节"><span class="nav-number">1.</span> <span class="nav-text">C++，函数的使用小细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#函数的编写"><span class="nav-number">1.0.1.</span> <span class="nav-text">函数的编写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数的传递"><span class="nav-number">1.0.2.</span> <span class="nav-text">参数的传递</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#作用域"><span class="nav-number">1.0.3.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#番外篇：Mutable关键字"><span class="nav-number">1.0.4.</span> <span class="nav-text">番外篇：Mutable关键字</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#着色器的创建"><span class="nav-number">1.</span> <span class="nav-text">着色器的创建</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
