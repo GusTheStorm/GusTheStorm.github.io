@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/carrot-solid.svg">
+  <link rel="mask-icon" href="/images/carrot-solid.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="文章来源于微信公众号：游戏程序员的自我修养，作者房燕良 所谓的“现代C++”，就是指C++ 11标准之后的C++语言，与之相对应的是“经典C++”，也就是C++ 98&#x2F;03标准的C++语言。Unreal Engine 4使用C++14标准开发，用到了很多现代C++的特性，而且它不使用标准库，这可能就需要我们对现代C++理解的更清晰一点。于是，打算把自己对于虚幻引擎中的现代C++编程的理解整理成博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚幻引擎与现代C++：转移语义和右值引用">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/04/21/[%E8%BD%AC%E8%BD%BD]%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E%E4%B8%8E%E7%8E%B0%E4%BB%A3C++%EF%BC%9A%E8%BD%AC%E7%A7%BB%E8%AF%AD%E4%B9%89%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/index.html">
+<meta property="og:site_name" content="EZhang">
+<meta property="og:description" content="文章来源于微信公众号：游戏程序员的自我修养，作者房燕良 所谓的“现代C++”，就是指C++ 11标准之后的C++语言，与之相对应的是“经典C++”，也就是C++ 98&#x2F;03标准的C++语言。Unreal Engine 4使用C++14标准开发，用到了很多现代C++的特性，而且它不使用标准库，这可能就需要我们对现代C++理解的更清晰一点。于是，打算把自己对于虚幻引擎中的现代C++编程的理解整理成博客">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-21T15:43:21.000Z">
+<meta property="article:modified_time" content="2020-05-11T15:54:34.922Z">
+<meta property="article:author" content="ZhangYi">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://gusthestorm.github.io/2020/04/21/[%E8%BD%AC%E8%BD%BD]%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E%E4%B8%8E%E7%8E%B0%E4%BB%A3C++%EF%BC%9A%E8%BD%AC%E7%A7%BB%E8%AF%AD%E4%B9%89%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>虚幻引擎与现代C++：转移语义和右值引用 | EZhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">EZhang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/04/21/[%E8%BD%AC%E8%BD%BD]%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E%E4%B8%8E%E7%8E%B0%E4%BB%A3C++%EF%BC%9A%E8%BD%AC%E7%A7%BB%E8%AF%AD%E4%B9%89%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
+      <meta itemprop="name" content="ZhangYi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="EZhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          虚幻引擎与现代C++：转移语义和右值引用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-21 23:43:21" itemprop="dateCreated datePublished" datetime="2020-04-21T23:43:21+08:00">2020-04-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-11 23:54:34" itemprop="dateModified" datetime="2020-05-11T23:54:34+08:00">2020-05-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>文章来源于微信公众号：游戏程序员的自我修养，作者房燕良</p>
+<p>所谓的“现代C++”，就是指C++ 11标准之后的C++语言，与之相对应的是“经典C++”，也就是C++ 98/03标准的C++语言。Unreal Engine 4使用C++14标准开发，用到了很多现代C++的特性，而且它不使用标准库，这可能就需要我们对现代C++理解的更清晰一点。于是，打算把自己对于虚幻引擎中的现代C++编程的理解整理成博客，希望对Unreal C++开发的朋友有点帮助。这一系列博客主要还是讲现代C++的基础编程为主，并注重在虚幻引擎开发中的实用性。</p>
+<p>首先，我们来聊一聊<strong>转移语义（Move Semantics）</strong>，这是C++11标准中最重要的一个特性了。也许你在网上看过一些相关文章，往往前面先是大篇幅的讲解什么是“右值引用”，让人看的昏昏欲睡，然而“<strong>右值引用（Rvalue References）</strong>”只是一种底层的语言机制，基于它才能实现所谓的<strong>转移语义（Move Semantics）</strong>和<strong>完美转发（Perfect Forwarding）</strong>。在这里，咱们就直奔主题，从Why、What、How三个层面把转移语义搞明白，其中会用到“右值引用”，自然也能理解了。</p>
+<h2 id="转移语义解决什么问题？"><a href="#转移语义解决什么问题？" class="headerlink" title="转移语义解决什么问题？"></a>转移语义解决什么问题？</h2><p>“转移语义”真的不是啥玄妙的新技术，只是经典C++遗留问题的一个解决方案。在C++中默认使用值类型，值类型的变量之间只能执行“<strong>拷贝语义（Copy Semantics）</strong>”，而值拷贝对于那些管理着内部重量级资源的对象来说可能很昂贵，例如 std::vector 容器。</p>
+<p>OK，咱们先不扯这些技术名词，来看个简单的例子吧。假设：我们要实现一个类，其内部管理一块内存，用来存储大量的数据。在C++中，一般会在构造的时候创建它们、在析构的时候要释放它们。<strong>经典C++执行对象复制的时候，需要通过自定义的拷贝构造函数和操作符来实现内部资源对象的复制</strong>。例如这样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">MyString</span> &#123;</span></span><br><span class="line">  <span class="keyword">char</span>* mData;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> mSize;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  MyString() : mData(<span class="literal">NULL</span>), mSize(<span class="number">0</span>) &#123;&#125;</span><br><span class="line">  ~MyString() &#123;</span><br><span class="line">    <span class="keyword">if</span> (mData) <span class="keyword">delete</span>[] mData;</span><br><span class="line">  &#125;</span><br><span class="line">  MyString(<span class="keyword">const</span> MyString&amp; other) &#123;</span><br><span class="line">    <span class="keyword">if</span> (other.mSize &gt; <span class="number">0</span> &amp;&amp; other.mData) &#123;</span><br><span class="line">      mData = <span class="keyword">new</span> <span class="keyword">char</span>[other.mSize];</span><br><span class="line">      mSize = other.mSize;</span><br><span class="line">      <span class="built_in">memcpy</span>(mData, other.mData, mSize);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      mData = <span class="literal">NULL</span>;</span><br><span class="line">      mSize = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ... ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上述代码中使用了我已经多年为用过的裸指针，只是为了例子更直观，项目中并不提倡这样用啦。</p>
+</blockquote>
+<p>当下面代码运行的时候，它就会在栈上开辟一个临时对象，然后再调用拷贝构造函数，进行一次内存拷贝，然后把原来那个临时对象析构掉。这太笨拙了吧？！对，就是这个问题！</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MyString <span class="title">MakeXXXString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">MyString <span class="title">tmp</span><span class="params">(<span class="string">"blah blah"</span>)</span></span>;</span><br><span class="line">  tmp += <span class="string">"blah blah"</span>;</span><br><span class="line">  <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MyString str = MakeXXXString();</span><br></pre></td></tr></table></figure>
+<p>在经典C++中，我们总是使用引用等方式，极力避免这种情况；而在现代C++中，你可能会看到越来越多的大对象按值传递，因为C++11标准中引入了“转移语义”。</p>
+<h2 id="如何实现转移语义？"><a href="#如何实现转移语义？" class="headerlink" title="如何实现转移语义？"></a>如何实现转移语义？</h2><p>为了获得更好的性能，上面那种情况下，理想的处理方式是<strong>把那个临时对象所管理的内部资源的所有权转移给新的对象</strong>。那么，怎么转移呢？你需要依C++ 11标准，来实现自己的<strong>转移构造函数（Move Constructor）</strong>和<strong>转移赋值函数（Move Assignment）</strong>。具体代码如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyString</span> &#123;</span></span><br><span class="line"> <span class="keyword">char</span>* mData;</span><br><span class="line"> <span class="keyword">unsigned</span> <span class="keyword">int</span> mSize;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line"> MyString(MyString&amp;&amp; rhs) &#123;</span><br><span class="line">   moveFrom(rhs);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> MyString&amp; <span class="keyword">operator</span>=(MyString&amp;&amp; rhs) &#123;</span><br><span class="line">   moveFrom(rhs);</span><br><span class="line">   <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line"> <span class="function"><span class="keyword">void</span> <span class="title">moveFrom</span><span class="params">(MyString&amp;&amp; rhs)</span></span>&#123;</span><br><span class="line">   mData = rhs.mData;</span><br><span class="line">   mSize = rhs.mSize;</span><br><span class="line">   rhs.mData = <span class="literal">nullptr</span>;</span><br><span class="line">   rhs.mSize = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在上面这段代码中，我们实现了一个转移构造函数（Move Constructor）和一个转移赋值操作符（Move Assignment），它们的核心操作都由<code>moveFrom()</code>函数实现。这个函数很简单，就是把原来那个对象中的内存指针和状态值复制到这个对象内，然后把原来那个对象的指针置空，这样那个对象在析构的时候就不会释放这块内存了。于是，也就完成了<strong>内部资源的所有权转移</strong>。</p>
+<p>如果你没有实现拷贝构造函数和拷贝赋值操作符，编译器会在需要的时候自动帮你实现一个；但是<strong>转移构造函数和转移赋值操作符则不会自动生成</strong>，如果你没有自己实现的话，编译器会转而调用拷贝构造函数或者拷贝赋值操作符。（C++编译器总是很热心的来帮倒忙）</p>
+<p>上面的描述就是“转移语义”的一个最典型的场景。通过这个简单例子，我们先不谈艰涩的语言标准，先把问题和解决方法搞清楚。顺带说明一下，Move Semantics，很多人也译作“移动语义”，但是我认为“转移语义”更为贴切：它实现的对象内部资源的所有权转移！</p>
+<p>在Unreal引擎中自定义的各种容器，包括TArray、TMap、TSet、FString等，它们也都和现代C++的标准STL容器一样实现了转移构造函数和转移赋值操作符，所以在C++代码中，<strong>你可以大胆的返回一个大型的TArray临时对象或者FString数据，不会有性能惩罚</strong>。那么对于C++/蓝图的互操作代码又如何呢？请见最后一小节</p>
+<h2 id="右值引用和std-move-MoveTemp"><a href="#右值引用和std-move-MoveTemp" class="headerlink" title="右值引用和std::move/MoveTemp"></a>右值引用和std::move/MoveTemp</h2><p>需要注意<code>class MyString</code>的转移构造函数和转移赋值操作符的参数类型是：<code>MyString&amp;&amp;</code>，有两个&amp;符号，这个就是“右值引用”啦(并不是带&amp;&amp;就都是右值引用，还可能是所谓的万能引用：Universal Reference，先按下不表)! 因为编译器要明确区分参数类型，才能确定为你调用哪个构造函数或赋值操作符，也就是进行“拷贝”还是“转移”。上面那个<code>MakeXXXString()</code>函数的返回值，就是典型的“右值”。当<code>class MyString</code>具备转移构造函数之后，<code>MyString str = MakeXXXString()</code>这一句就不会再调用拷贝构造函数了，而是调用转移构造函数，而其内部实现只是内存指针的所有权转移。</p>
+<p>说到这里，“转移语义”也就说明白了！但是，也许你注意到了引擎中还有一个<strong>MoveTemp模板函数</strong>（对应C++标准库中的std::move)，这又是什么鬼呢？ </p>
+<p>简单来说std::move和Unreal的MoveTemp并没有移动什么，它们不负责移动任何东西，实际的移动操作是由对象的移动构造函数和移动赋值操作符完成的，也就是前面说的那些。MoveTemp的本质就是一个“强制类型转换”，使用它就可以把一个左值引用转换成右值引用。这个东西的名字，在C++标准制定过程中，曾有提议叫做“rvalue_cast”，但是最后还是选择了叫做“move”。我们可以理解为：move这个词更形象吧，因为经过MoveTemp之后的对象就死了。。。。它内部管理的数据/资源已经被转移走了。</p>
+<p>我们来用TArray举个简单的例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TArray&lt;int32&gt; a1 = &#123; <span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span> &#125;;</span><br><span class="line">TArray&lt;int32&gt; a2 = MoveTemp(a1);</span><br></pre></td></tr></table></figure>
+<p>a1本来是一个左值，通过<code>MoveTemp</code>强制把它移动到了a2；如果不使用<code>MoveTemp</code>的话，则会调用拷贝构造函数。这两行代码执行之后，<code>a1.Num()</code>和<code>a2.Num()</code>各自会是多少呢？实际的情况是a1已经为空了，a2有那四个元素。</p>
+<h2 id="蓝图-C-互操作中的移动语义"><a href="#蓝图-C-互操作中的移动语义" class="headerlink" title="蓝图/C++互操作中的移动语义"></a>蓝图/C++互操作中的移动语义</h2><p>我分了几种情况进行了测试，下面逐个看一下：</p>
+<h3 id="C-返回右值的情况"><a href="#C-返回右值的情况" class="headerlink" title="C++返回右值的情况"></a>C++返回右值的情况</h3><p>假设我们有这样一个供蓝图调用的函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UFUNCTION(BlueprintCallable, Category = <span class="string">"Modern C++"</span>)</span><br><span class="line"><span class="function">TArray&lt;<span class="keyword">int</span>&gt; <span class="title">MakeBigArrayInCpp</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>在”.generated.h”中生成的对应的Thunk函数是这样的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DECLARE_FUNCTION(execMakeBigArrayInCpp) \</span><br><span class="line">&#123; \</span><br><span class="line">P_FINISH; \</span><br><span class="line">P_NATIVE_BEGIN; \</span><br><span class="line">*(TArray&lt;int32&gt;*)Z_Param__Result=P_THIS-&gt;MakeBigArrayInCpp(); \</span><br><span class="line">P_NATIVE_END; \</span><br><span class="line">&#125; \</span><br></pre></td></tr></table></figure>
+<p>对<code>Z_Param__Result</code>执行赋值操作会调用TArray的移动赋值操作符，所以这里并不会产生TArray内部数据的拷贝，也就是说：C++返回临时对象的情况是支持移动语义。</p>
+<h3 id="蓝图返回右值的情况"><a href="#蓝图返回右值的情况" class="headerlink" title="蓝图返回右值的情况"></a>蓝图返回右值的情况</h3><p>经测试，这个不支持！下面这个代码是可以编译通过，但是在蓝图中无法创建这个节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UFUNCTION(BlueprintImplementableEvent, Category = <span class="string">"Modern C++"</span>)</span><br><span class="line"><span class="function">TArray&lt;uint8&gt; <span class="title">MakeBigArray</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>函数参数的支持情况</strong></p>
+<p>使用C++编程的蓝图函数可以通过UPARAM来支持左值引用，来处理蓝图中的对象，类似下面这样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UFUNCTION(BlueprintCallable)</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoSomething</span><span class="params">(UPARAM(ref) TArray&lt;<span class="keyword">int</span>&gt; &amp;InOutArray)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>不过，这种方式不支持右值引用参数传递，这也是意料之中的，这种需求也极少有吧。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>UE4 Coding Standard</li>
+<li>Modern C++: What You Need to Know,Herb Sutter, MS Build 2014</li>
+<li>右值引用与转移语义,李胜利, IBM Developer</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="ZhangYi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="ZhangYi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/15/KatanaZero%E5%A6%82%E4%BD%95%E8%AE%A9%E7%8E%A9%E5%AE%B6%E4%BD%93%E9%AA%8C%E5%88%B0%E8%A1%8C%E4%BA%91%E6%B5%81%E6%B0%B4%E7%9A%84%E6%88%98%E6%96%97/" rel="prev" title="KatanaZero如何让玩家快速体验到行云流水的战斗">
+      <i class="fa fa-chevron-left"></i> KatanaZero如何让玩家快速体验到行云流水的战斗
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#转移语义解决什么问题？"><span class="nav-number">1.</span> <span class="nav-text">转移语义解决什么问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现转移语义？"><span class="nav-number">2.</span> <span class="nav-text">如何实现转移语义？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#右值引用和std-move-MoveTemp"><span class="nav-number">3.</span> <span class="nav-text">右值引用和std::move&#x2F;MoveTemp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蓝图-C-互操作中的移动语义"><span class="nav-number">4.</span> <span class="nav-text">蓝图&#x2F;C++互操作中的移动语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-返回右值的情况"><span class="nav-number">4.1.</span> <span class="nav-text">C++返回右值的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#蓝图返回右值的情况"><span class="nav-number">4.2.</span> <span class="nav-text">蓝图返回右值的情况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZhangYi"
+      src="/images/sunny_yj_erhai.gif">
+  <p class="site-author-name" itemprop="name">ZhangYi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gusthestorm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gusthestorm" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:444022683@qq.com" title="E-Mail → mailto:444022683@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/ewanglf" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;ewanglf" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangYi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
