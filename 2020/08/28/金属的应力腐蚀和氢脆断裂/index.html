@@ -20,19 +20,28 @@
     var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="文件是对I&#x2F;O设备的抽象表示，虚拟内存是对主存和磁盘的抽象表示，进程则是对处理器、主存和I&#x2F;O设备的抽象表示。">
+  <meta name="description" content="概述： 第六章金属的应力腐蚀和氢脆断裂 Stress corrosion and hydrogen embrittlement fracture 金属腐蚀的危害非常大，它不仅仅对金属材料本身造成破坏，更重要的是使制品的等级下降、精度、灵敏度等受损，影响其使用价值甚至报废。 (1)腐蚀造成的破坏般投先乙从人金属表面开始，然后伴随着金属腐蚀过程进一步 发展; (2)腐蚀破坏扩展到金属材料的内部;并使金">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unix进程与进程环境">
-<meta property="og:url" content="https://gusthestorm.github.io/2020/06/22/Unix%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:title" content="金属的应力腐蚀和氢脆断裂">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/08/28/%E9%87%91%E5%B1%9E%E7%9A%84%E5%BA%94%E5%8A%9B%E8%85%90%E8%9A%80%E5%92%8C%E6%B0%A2%E8%84%86%E6%96%AD%E8%A3%82/index.html">
 <meta property="og:site_name" content="EZhang">
-<meta property="og:description" content="文件是对I&#x2F;O设备的抽象表示，虚拟内存是对主存和磁盘的抽象表示，进程则是对处理器、主存和I&#x2F;O设备的抽象表示。">
+<meta property="og:description" content="概述： 第六章金属的应力腐蚀和氢脆断裂 Stress corrosion and hydrogen embrittlement fracture 金属腐蚀的危害非常大，它不仅仅对金属材料本身造成破坏，更重要的是使制品的等级下降、精度、灵敏度等受损，影响其使用价值甚至报废。 (1)腐蚀造成的破坏般投先乙从人金属表面开始，然后伴随着金属腐蚀过程进一步 发展; (2)腐蚀破坏扩展到金属材料的内部;并使金">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-06-22T14:38:35.000Z">
-<meta property="article:modified_time" content="2020-08-06T15:15:57.694Z">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703082919.png@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703082447.png@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703083364.png@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703082867.png@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703083184.png@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/27/1574819584738.jpg@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/27/1574819622203.jpg@!water">
+<meta property="og:image" content="https://images.mfcad.com/tuzhi/2019/11/27/1574819659773.jpg@!water">
+<meta property="article:published_time" content="2020-08-28T07:15:22.000Z">
+<meta property="article:modified_time" content="2020-09-06T04:03:25.339Z">
 <meta property="article:author" content="ZhangYi">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.mfcad.com/tuzhi/2019/11/02/1572703082919.png@!water">
 
-<link rel="canonical" href="https://gusthestorm.github.io/2020/06/22/Unix%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%8E%AF%E5%A2%83/">
+<link rel="canonical" href="https://gusthestorm.github.io/2020/08/28/%E9%87%91%E5%B1%9E%E7%9A%84%E5%BA%94%E5%8A%9B%E8%85%90%E8%9A%80%E5%92%8C%E6%B0%A2%E8%84%86%E6%96%AD%E8%A3%82/">
 
 
 <script id="page-configurations">
@@ -44,7 +53,7 @@
   };
 </script>
 
-  <title>Unix进程与进程环境 | EZhang</title>
+  <title>金属的应力腐蚀和氢脆断裂 | EZhang</title>
   
 
 
@@ -163,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/06/22/Unix%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%8E%AF%E5%A2%83/">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/08/28/%E9%87%91%E5%B1%9E%E7%9A%84%E5%BA%94%E5%8A%9B%E8%85%90%E8%9A%80%E5%92%8C%E6%B0%A2%E8%84%86%E6%96%AD%E8%A3%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
@@ -176,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Unix进程与进程环境
+          金属的应力腐蚀和氢脆断裂
         </h1>
 
         <div class="post-meta">
@@ -186,14 +195,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-06-22 22:38:35" itemprop="dateCreated datePublished" datetime="2020-06-22T22:38:35+08:00">2020-06-22</time>
+              <time title="创建时间：2020-08-28 15:15:22" itemprop="dateCreated datePublished" datetime="2020-08-28T15:15:22+08:00">2020-08-28</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-06 23:15:57" itemprop="dateModified" datetime="2020-08-06T23:15:57+08:00">2020-08-06</time>
+                <time title="修改时间：2020-09-06 12:03:25" itemprop="dateModified" datetime="2020-09-06T12:03:25+08:00">2020-09-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +210,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                  <a href="/categories/%E5%88%B6%E9%80%A0/" itemprop="url" rel="index"><span itemprop="name">制造</span></a>
                 </span>
             </span>
 
@@ -223,33 +232,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>文件是对I/O设备的抽象表示，虚拟内存是对主存和磁盘的抽象表示，进程则是对处理器、主存和I/O设备的抽象表示。</p>
+        <p>概述：</p>
+<p>第六章金属的应力腐蚀和氢脆断裂</p>
+<p>Stress corrosion and hydrogen</p>
+<p>embrittlement fracture</p>
+<p>金属腐蚀的危害非常大，它不仅仅对金属材料本身造成破坏，更重要的是使制品的等级下降、精度、灵敏度等受损，影响其使用价值甚至报废。</p>
+<p>(1)腐蚀造成的破坏般投先乙从人金属表面开始，然后伴随着金属腐蚀过程进一步 发展;</p>
+<p>(2)腐蚀破坏扩展到金属材料的内部;并使金属性质和组成发生改变。这种破坏往往是局部向整体扩展;</p>
+<p>(3)局部一-旦遭到破坏;常常造成突发事件;</p>
+<p>(4)金属材料的表面状态对金属的腐蚀过程的进行有显著的影响。</p>
 <a id="more"></a>
-<h4 id="程序与进程"><a href="#程序与进程" class="headerlink" title="程序与进程"></a>程序与进程</h4><blockquote>
-<p>二进制文件的布局</p>
-<p>如何加载到内存</p>
-</blockquote>
-<h5 id="进程的创建过程"><a href="#进程的创建过程" class="headerlink" title="进程的创建过程"></a>进程的创建过程</h5><h5 id="Unix进程API"><a href="#Unix进程API" class="headerlink" title="Unix进程API"></a>Unix进程API</h5><blockquote>
-<p>fork()</p>
-<p>wait()与waitpid()</p>
-</blockquote>
-<h5 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h5><blockquote>
-<p>什么是守护进程（Daemon）</p>
-</blockquote>
-<p>脱离终端持续运行的进程。在系统引导时装入，系统关闭时终止。</p>
-<blockquote>
-<p>创建过程</p>
-</blockquote>
-<p>1成为init的子进程                                  fork();                                                    父进程的终止会让2shell认为程序结束<br>2成为会话首进程，进程组组长            setsid();                                                脱离终端<br>3设置根目录                                            chdir(“/“);                                            避免继承来的目录问题<br>4设置权限掩码                                        umask(0);                                            避免继承来的权限问题<br>5关闭不需要的fd                                    (i&lt;MAXFILE)close(i)；                        减少资源消耗</p>
-<blockquote>
-<p>出错记录</p>
-</blockquote>
-<p>没有终端，就需要将出错日志写到文件里。所有守护进程写在一个文件减少系统管理员的工作。</p>
-<p>内核使用log()，用户进程使用syslog()将消息发送到/dev/log，日志消息可使用UDP发送到514端口。</p>
-<blockquote>
-<p>约定</p>
-</blockquote>
-<p>守护进程使用的锁文件放在/var/run/name.pid<br>若支持配置选项，放在/etc/name.conf<br>SIGHUP信号让守护进程重新读配置文件</p>
+<p>1、材料的腐蚀具有双重性。通常腐蚀对金属构 件是有害的，但有时可以利用腐蚀现象对金 属材料进行电化学加工，如制备信息硬件的 印刷线路板，制取奥氏体不锈钢粉末等。</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/02/1572703082919.png@!water" alt="img"></p>
+<p>2、3. 根据腐蚀破坏的外部特征分类 (1) 全面腐蚀:均匀腐蚀，腐蚀分布在整个表面上并 (2)不均匀腐蚀:腐蚀主要发生在金属表面的某一区 域，而表面的其他部分未被破坏。</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/02/1572703082447.png@!water" alt="img"></p>
+<p>3、1-均匀腐蚀，2-不均匀腐蚀，3-选择性腐蚀，4-应力腐蚀， 5-斑点腐蚀，6-溃疡腐蚀，7-孔蚀，8-缝隙腐蚀， 9-晶间腐蚀，10-穿 晶腐蚀，11-表面 下腐蚀，12-疲劳腐蚀</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/02/1572703083364.png@!water" alt="img"></p>
+<p>4、腐蚀的类型 根据金属腐蚀的机理不同分类</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/02/1572703082867.png@!water" alt="img"></p>
+<p>5、三、耐蚀性及其评定方法 金属材料在某-一环境介质下承受或抵抗腐蚀的能力 称为金属材料的耐蚀性或抗蚀性</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/02/1572703083184.png@!water" alt="img"></p>
+<p>6、腐蚀电池形成原因举例</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/27/1574819584738.jpg@!water" alt="img"></p>
+<p>7、盈利俯视端口微观特征</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/27/1574819622203.jpg@!water" alt="img"></p>
+<p>8、图6-5应力腐蚀裂纹的分叉现象</p>
+<p><img src="https://images.mfcad.com/tuzhi/2019/11/27/1574819659773.jpg@!water" alt="img"></p>
 
     </div>
 
@@ -285,12 +293,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/06/14/%E5%BA%8F%E5%88%97%E5%BC%8F%E5%AE%B9%E5%99%A8/" rel="prev" title="序列式容器——STL源码剖析系列（3）">
-      <i class="fa fa-chevron-left"></i> 序列式容器——STL源码剖析系列（3）
+    <a href="/2020/07/19/Linux%E7%A8%8B%E5%BA%8F%E8%B0%83%E8%AF%95/" rel="prev" title="Linux程序调试">
+      <i class="fa fa-chevron-left"></i> Linux程序调试
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/07/04/%E8%99%9A%E5%81%87%E5%94%A4%E9%86%92/" rel="next" title="虚假唤醒">
-      虚假唤醒 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/08/30/interview/" rel="next" title="面试题收集">
+      面试题收集 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -351,7 +359,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#程序与进程"><span class="nav-number">1.</span> <span class="nav-text">程序与进程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#进程的创建过程"><span class="nav-number">1.1.</span> <span class="nav-text">进程的创建过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Unix进程API"><span class="nav-number">1.2.</span> <span class="nav-text">Unix进程API</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#守护进程"><span class="nav-number">1.3.</span> <span class="nav-text">守护进程</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
