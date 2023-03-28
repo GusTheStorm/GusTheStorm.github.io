@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0-rc1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/carrot-solid.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/carrot-solid.svg">
+  <link rel="mask-icon" href="/images/carrot-solid.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gusthestorm.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Katana Zero 如何让玩家快速体验到行云流水的战斗？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KatanaZero如何让玩家快速体验到行云流水的战斗">
+<meta property="og:url" content="https://gusthestorm.github.io/2020/04/15/KatanaZero%E5%A6%82%E4%BD%95%E8%AE%A9%E7%8E%A9%E5%AE%B6%E4%BD%93%E9%AA%8C%E5%88%B0%E8%A1%8C%E4%BA%91%E6%B5%81%E6%B0%B4%E7%9A%84%E6%88%98%E6%96%97/index.html">
+<meta property="og:site_name" content="EZhang">
+<meta property="og:description" content="Katana Zero 如何让玩家快速体验到行云流水的战斗？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/0.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/1.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/2.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/3.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/4.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/jz1.gif">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/5.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/MS1.png">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/jz2.gif">
+<meta property="og:image" content="https://gusthestorm.github.io/images/game/katana/jz3.gif">
+<meta property="article:published_time" content="2020-04-14T16:21:42.000Z">
+<meta property="article:modified_time" content="2023-03-28T16:10:59.244Z">
+<meta property="article:author" content="ZhangYi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gusthestorm.github.io/images/game/katana/0.png">
+
+<link rel="canonical" href="https://gusthestorm.github.io/2020/04/15/KatanaZero%E5%A6%82%E4%BD%95%E8%AE%A9%E7%8E%A9%E5%AE%B6%E4%BD%93%E9%AA%8C%E5%88%B0%E8%A1%8C%E4%BA%91%E6%B5%81%E6%B0%B4%E7%9A%84%E6%88%98%E6%96%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>KatanaZero如何让玩家快速体验到行云流水的战斗 | EZhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">EZhang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gusthestorm.github.io/2020/04/15/KatanaZero%E5%A6%82%E4%BD%95%E8%AE%A9%E7%8E%A9%E5%AE%B6%E4%BD%93%E9%AA%8C%E5%88%B0%E8%A1%8C%E4%BA%91%E6%B5%81%E6%B0%B4%E7%9A%84%E6%88%98%E6%96%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/sunny_yj_erhai.gif">
+      <meta itemprop="name" content="ZhangYi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="EZhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KatanaZero如何让玩家快速体验到行云流水的战斗
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-15 00:21:42" itemprop="dateCreated datePublished" datetime="2020-04-15T00:21:42+08:00">2020-04-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%B8%E6%88%8F/" itemprop="url" rel="index"><span itemprop="name">游戏</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Katana-Zero-如何让玩家快速体验到行云流水的战斗？"><a href="#Katana-Zero-如何让玩家快速体验到行云流水的战斗？" class="headerlink" title="Katana Zero 如何让玩家快速体验到行云流水的战斗？"></a>Katana Zero 如何让玩家快速体验到行云流水的战斗？</h3><p><img src="\images\game\katana\0.png" alt=""></p>
+<span id="more"></span>
+<p>Katana Zero（武士零）是2019年4月份上线的一款像素风平台游戏。尽管其游戏许多方面上如美术风格、任务节奏等机制类似与火线迈阿密(Hotline miami)，但并不妨碍这款游戏彰显自己的个性，并让众多玩家津津乐道。如果让我来总结这款游戏带给玩家的游玩体验，我真的不认为能比官方的总结得更好：一款新黑色电影风格的华丽平台动作游戏，以极速动作展开瞬间决定生死的战斗，劈砍、冲刺、操纵时间，<strong>在华丽、无情、行云流水般的战斗中发现你的过去</strong>。开发商<strong>Askiisoft</strong>的确将这句话发挥到了极致！此篇章侧重从个人角度分析本作的游戏性，暂不讨论其性格鲜明的对话机制和叙事。</p>
+<hr>
+<h4 id="进入游戏的前几分钟"><a href="#进入游戏的前几分钟" class="headerlink" title="进入游戏的前几分钟"></a>进入游戏的前几分钟</h4><p>Katana Zero是一款小体量独立游戏，其核心机制里面非常重要的一点是一击必杀，并且没有技能树类的机制扩展。也像火线迈阿密一样。但得益于开发者的取舍，武士零的战斗过程更加纯粹，诸如击中后停帧等设定也让其战斗反馈体验更好。鉴于此，在最开始就亮出自己的肌肉可以说是非常明智的做法。那么我们就来看看，打开游戏后的几分钟，玩家会体验到什么吧：</p>
+<p><img src="\images\game\katana\1.png" alt=""></p>
+<p><img src="\images\game\katana\2.png" alt=""></p>
+<p><img src="\images\game\katana\3.png" alt=""></p>
+<p><img src="\images\game\katana\4.png" alt=""></p>
+<p><img src="\images\game\katana\jz1.gif" alt=""></p>
+<p>玩家第一次按下按键就囊括了整个游戏非常重要的一些<strong>攻击机制</strong>：<strong>子弹时间、攻击的第二种用处；</strong>随后玩家会逐渐体验到几乎全部的游戏机制。攻击时人物会随之向前飞跃，这增加了挥刀的攻击距离，也使得玩家能够在跳跃之后上砍增加攻击高度。并且这一机制能够做到短暂的空中滞停，这让玩家在落地之前有更多思考时间，也就意味着<strong>提高玩家的容错率</strong>。</p>
+<p>当然还有<strong>移动机制</strong>：左右移动、下方向键跳至下一楼层、下方向键快速落地、滑上墙体、翻滚无敌时间。这些机制并没有非常新颖的地方，但是做到了与主角零融为一体，让玩家能够操纵地非常流畅，在战斗中仿佛注意不到它们，全部的<strong>注意力都在敌人身上</strong>，动手之前玩家就需要做好进攻决策。这一点跟一些平台游戏稍有区别，比如2018年获奖无数的信使(The Messenger)则更多侧重于玩家与关卡之间的互动。当然，游戏基调不同，人物机制和关卡的设置必然会产生差异。</p>
+<p><img src="\images\game\katana\5.png" alt=""></p>
+<p><img src="\images\game\katana\MS1.png" alt=""></p>
+<p>在可以算是教学关卡的前两个场景里，武士零也向玩家展示了游戏的<strong>场景互动性</strong>。比如门可以砍开，也可以踢开造成击杀；这一点给玩家留出了<strong>自由选择</strong>的权力，在游戏稍后的关卡里，开发者也暗示玩家通关的方式并不止一种；</p>
+<p><img src="\images\game\katana\jz2.gif" alt=""></p>
+<p><img src="\images\game\katana\jz3.gif" alt=""></p>
+<hr>
+<h4 id="为何多数玩家给出的评论是-爽快-的战斗"><a href="#为何多数玩家给出的评论是-爽快-的战斗" class="headerlink" title="为何多数玩家给出的评论是[爽快]的战斗"></a>为何多数玩家给出的评论是[爽快]的战斗</h4><p>许多平台游戏都有流畅的战斗体验，有将战斗内容发挥到极致的如死亡细胞(Dead Cells)，或操控感极强的蔚蓝（celeste）、空洞骑士（Hollow Knight）等等。</p>
+<p>是什么让武士零的战斗如此独具一格又如此吸引人？</p>
+<p>为了解答这些问题，我先入为主地选择了敌人这一首要因素来尝试做分析，结果也还算回答地不错。</p>
+<p>我统计了游戏除开特殊机制以外的前几个关卡敌人分布的特点（不包括后期敌人比如带盾的警察、无人机等），这里的特殊是指比如电音头任务里玩家要混进人群尬舞以躲避保安视线，或者零骑着摩托公路狂奔等有趣内容… 结果表明，不论是敌人数量，敌人的类型，还有场景的交互性，都有着明显的难度增加。当然，简单通过单类型敌人的难度并不一定能够反映出难度，因为还有敌人的布局，不过也能在一个角度体现出难度的递增。</p>
+<p><strong>表1</strong> 不科学简化的难度计算表</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>任务\敌人</th>
+<th>关卡数</th>
+<th>泰大壮1</th>
+<th>纤细李哥2</th>
+<th>持枪的敌人3</th>
+<th>炮台4</th>
+<th>总数</th>
+<th>难度值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>3</td>
+<td>9</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>10</td>
+<td>12</td>
+</tr>
+<tr>
+<td>2</td>
+<td>6</td>
+<td>15</td>
+<td>18</td>
+<td>4</td>
+<td>0</td>
+<td>37</td>
+<td>63</td>
+</tr>
+<tr>
+<td>3</td>
+<td>6</td>
+<td>14</td>
+<td>15</td>
+<td>20</td>
+<td>4</td>
+<td>53</td>
+<td>120</td>
+</tr>
+<tr>
+<td>4</td>
+<td>12</td>
+<td>21</td>
+<td>17</td>
+<td>83</td>
+<td>0</td>
+<td>121</td>
+<td>414</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>表中我并没有将只发射一颗子弹的敌人和使用霰弹枪的敌人分开统计，后者难度稍大一点，因为玩家不能简单的反弹子弹。我们可以将玩家消灭某个敌人需要考虑的因素简化为难度等级。其中泰大壮是最简单的敌人，他仅有攻击没有任何额外机制，我们可以将其看作<strong>1</strong>。但是在复杂的情景里面放置一到两个能做到合理地增加游戏趣味。纤细李哥能够对玩家的攻击造成弹刀（这可能就是为什么这款游戏被戏称为迈阿密只狼吧），我们可以看作<strong>2</strong>。持枪者玩家可能会在场景里考虑用到子弹时间和反弹子弹两个机制，我们看作<strong>3</strong>。炮台类似持枪者，但在设定上射速更快，并且设置的位置往往更加刁钻，我们可以看作<strong>4</strong>。虽然不能将难度简单地作为线性模型来考量，但大致能够体现难度的增加，这暂时就足够说明问题了。</p>
+<p>递增的难度仅仅是使得玩家需要更快的反映，更快速地对更复杂的形势做出判断吗？这就足以产生爽快的战斗体验了吗？</p>
+<p>我们可以进一步探究。</p>
+<blockquote>
+<p>心理学家<strong>Scott Rigby</strong>在GDC17讲座上谈到，一个游戏之所以想让人玩下去，是因为能够满足我们三个基本心理需求：自主（能够做出选择的需求）、胜任（掌握技能克服挑战的需求）、关联（与他人建立联系）。</p>
+</blockquote>
+<p>在一击必杀的设定下，愈加复杂的敌人意味着玩家在按下攻击键之前，能够也必须去做出决策，譬如是否利用投掷品，是否子弹时间，是否翻滚、何时应该开门杀等等。开发者将自由决策当作了重点，而不是让别的内容占据上风，比如投掷品并不需要玩家精准地瞄准，它会在接近60°范围内自动瞄准，玩家要做的基本是做出是否投掷以及何时投掷这一决定；再比如，第一次任务时，开发者让我们的任务目标“意外死亡”，这也暗示了玩家，通关方式并不止一种。这些设计好的细节很好地满足了玩家<strong>自主选择的需求</strong>，也与行云流水的战斗这一初衷<strong>保持了一致性</strong>。</p>
+<p>另外一点就是偏后的关卡在场景设置中重复着前面的关卡中开发者想教会玩家的不同技能，比如如何面对上层敌人、如何选择投掷品释放的时机、如何利用子弹时间等等。这些一开始就亮给玩家的独特机制，在后面的每一个关卡中都在接受考验。由于一击必杀，玩家就必须去考虑如何更好地运用他所学会的这些能力，而只要通过了一个关卡，则必然是一命通过，玩家在不断地获取到自己对这些能力的<strong>胜任感</strong>。就像在玩家面前摆上一道数学题，玩家可以用自己了解到的多个机制去尝试，去组合出多种解法。并且玩家还能在通过之后，欣赏自己控制的零是如何华丽地通过敌阵，这又是一次正面的反馈，并且这些设定，包括死亡、复活等和游戏的故事也保持了<strong>内在一致性</strong>。</p>
+<p>通过以上几点，我们能够看出开发者通过简化某些设定，将游戏体验的侧重点放在了让玩家不断学习新机制，然后再利用这些机制去自主决定如何解决面前的重重挑战。它很好地满足了玩家胜任和自主这两个心理需求。也就让玩家感到游戏的战斗过程非常流畅，每次通过一个子关卡都能获取到成就感，也就更想玩下去。这就是爽快的战斗过程。</p>
+<p>而本作之所以叙事部分也被玩家津津乐道，则需要另外篇章来分析了。下次再见吧~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="ZhangYi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="ZhangYi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/12/%E5%91%A8%E6%97%A5%E9%9A%8F%E7%AC%94/" rel="prev" title="周日随笔">
+      <i class="fa fa-chevron-left"></i> 周日随笔
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/21/%5B%E8%BD%AC%E8%BD%BD%5D%E8%99%9A%E5%B9%BB%E5%BC%95%E6%93%8E%E4%B8%8E%E7%8E%B0%E4%BB%A3C++%EF%BC%9A%E8%BD%AC%E7%A7%BB%E8%AF%AD%E4%B9%89%E5%92%8C%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/" rel="next" title="虚幻引擎与现代C++：转移语义和右值引用">
+      虚幻引擎与现代C++：转移语义和右值引用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Katana-Zero-%E5%A6%82%E4%BD%95%E8%AE%A9%E7%8E%A9%E5%AE%B6%E5%BF%AB%E9%80%9F%E4%BD%93%E9%AA%8C%E5%88%B0%E8%A1%8C%E4%BA%91%E6%B5%81%E6%B0%B4%E7%9A%84%E6%88%98%E6%96%97%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">Katana Zero 如何让玩家快速体验到行云流水的战斗？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E6%B8%B8%E6%88%8F%E7%9A%84%E5%89%8D%E5%87%A0%E5%88%86%E9%92%9F"><span class="nav-number">1.1.</span> <span class="nav-text">进入游戏的前几分钟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95%E5%A4%9A%E6%95%B0%E7%8E%A9%E5%AE%B6%E7%BB%99%E5%87%BA%E7%9A%84%E8%AF%84%E8%AE%BA%E6%98%AF-%E7%88%BD%E5%BF%AB-%E7%9A%84%E6%88%98%E6%96%97"><span class="nav-number">1.2.</span> <span class="nav-text">为何多数玩家给出的评论是[爽快]的战斗</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZhangYi"
+      src="/images/sunny_yj_erhai.gif">
+  <p class="site-author-name" itemprop="name">ZhangYi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gusthestorm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gusthestorm" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:444022683@qq.com" title="E-Mail → mailto:444022683@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/ewanglf" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;ewanglf" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangYi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v7.0.0-rc1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
